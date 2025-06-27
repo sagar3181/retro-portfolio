@@ -92,7 +92,10 @@ const Desktop = () => {
       )}
 
       {windows.terminal && (
-        <Terminal onClose={() => closeWindow('terminal')} />
+        <Terminal
+          onClose={() => closeWindow('terminal')}
+          onCommandRequest={(key) => openWindow(key)}
+        />
       )}
 
       {/* Taskbar */}
