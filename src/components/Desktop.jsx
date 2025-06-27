@@ -4,8 +4,8 @@ import Taskbar from './Taskbar';
 import icon from '../assets/computer.png';
 import terminalIcon from '../assets/terminal.png';
 import folderIcon from '../assets/folder.png';
+import wallpaper from '../assets/wallpaper.jpg';
 import Terminal from './Terminal';
-
 
 const Desktop = () => {
   const [windows, setWindows] = useState({
@@ -13,45 +13,59 @@ const Desktop = () => {
     whoiam: false,
     tech: false,
     projects: false,
+    terminal: false
   });
 
   const openWindow = (key) => setWindows((w) => ({ ...w, [key]: true }));
   const closeWindow = (key) => setWindows((w) => ({ ...w, [key]: false }));
 
+  const icons = [
+    {
+      key: 'about',
+      label: 'My Computer',
+      icon: icon
+    },
+    {
+      key: 'terminal',
+      label: 'Terminal',
+      icon: terminalIcon
+    }
+  ];
+
   return (
-    <div className="w-screen h-screen bg-teal-800 font-pixel text-sm text-white relative overflow-hidden">
-      {/* Desktop Icon */}
-      <div
-        className="absolute top-10 left-10 cursor-pointer text-center"
-        onDoubleClick={() => openWindow('about')}
-      >
-        <img src={icon} alt="About" className="w-10 h-10 mx-auto" />
-        <span>My Computer</span>
+    <div
+      className="w-screen h-screen bg-cover bg-center font-pixel text-sm text-white relative overflow-hidden"
+      style={{ backgroundImage: `url(${wallpaper})` }}
+    >
+      {/* Grid of desktop icons */}
+      <div className="absolute top-4 left-4 grid grid-cols-1 gap-y-4">
+        {icons.map(({ key, label, icon }) => (
+          <div
+            key={key}
+            onDoubleClick={() => openWindow(key)}
+            className="w-20 text-center cursor-pointer select-none"
+          >
+            <img src={icon} alt={label} className="w-10 h-10 mx-auto drop-shadow-[1px_1px_0_rgba(0,0,0,1)]" />
+            <span className="text-white text-xs drop-shadow-[1px_1px_0_rgba(0,0,0,1)] leading-tight block mt-1">
+              {label}
+            </span>
+          </div>
+        ))}
       </div>
 
-      {/* About Me Window */}
+      {/* Windows */}
       {windows.about && (
         <Window title="About Me" onClose={() => closeWindow('about')}>
           <div className="flex gap-4 p-2">
-            {/* Folder Icons */}
-            <div
-              className="text-center cursor-pointer"
-              onDoubleClick={() => openWindow('whoiam')}
-            >
+            <div className="text-center cursor-pointer" onDoubleClick={() => openWindow('whoiam')}>
               <img src={folderIcon} alt="Who I Am" className="w-10 h-10 mx-auto" />
               <p>Who I Am</p>
             </div>
-            <div
-              className="text-center cursor-pointer"
-              onDoubleClick={() => openWindow('tech')}
-            >
+            <div className="text-center cursor-pointer" onDoubleClick={() => openWindow('tech')}>
               <img src={folderIcon} alt="Tech Stack" className="w-10 h-10 mx-auto" />
               <p>Tech Stack</p>
             </div>
-            <div
-              className="text-center cursor-pointer"
-              onDoubleClick={() => openWindow('projects')}
-            >
+            <div className="text-center cursor-pointer" onDoubleClick={() => openWindow('projects')}>
               <img src={folderIcon} alt="Projects" className="w-10 h-10 mx-auto" />
               <p>Projects</p>
             </div>
@@ -59,16 +73,12 @@ const Desktop = () => {
         </Window>
       )}
 
-      {/* Who I Am Window */}
       {windows.whoiam && (
         <Window title="Who I Am" onClose={() => closeWindow('whoiam')}>
-          <p>
-            I'm Sagar, a full-stack developer focused on React, Node.js, and building nostalgic UI experiences.
-          </p>
+          <p>I'm Sagar, a full-stack developer focused on React, Node.js, and building nostalgic UI experiences.</p>
         </Window>
       )}
 
-      {/* Tech Stack Window */}
       {windows.tech && (
         <Window title="Tech Stack" onClose={() => closeWindow('tech')}>
           <ul className="list-disc pl-4">
@@ -80,7 +90,6 @@ const Desktop = () => {
         </Window>
       )}
 
-      {/* Projects Window */}
       {windows.projects && (
         <Window title="Projects" onClose={() => closeWindow('projects')}>
           <ul className="list-disc pl-4">
@@ -92,10 +101,7 @@ const Desktop = () => {
       )}
 
       {windows.terminal && (
-        <Terminal
-          onClose={() => closeWindow('terminal')}
-          onCommandRequest={(key) => openWindow(key)}
-        />
+        <Terminal onClose={() => closeWindow('terminal')} onCommandRequest={(key) => openWindow(key)} />
       )}
 
       {/* Taskbar */}
@@ -112,15 +118,6 @@ const Desktop = () => {
             : ''
         }
       />
-
-      {/* Terminal */}
-      <div
-      className="absolute top-32 left-10 cursor-pointer text-center"
-      onDoubleClick={() => openWindow('terminal')}
-      >
-      <img src={terminalIcon} alt="Terminal" className="w-10 h-10 mx-auto" />
-      <span>Terminal</span>
-      </div>
     </div>
   );
 };
